@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
 <!--<?import javafx.scene.layout.FlowPane?>-->
 
-<HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
   <GridPane HBox.hgrow="ALWAYS">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150" />
@@ -31,19 +24,19 @@
           </minWidth>
         </Label>
         <Label fx:id="name" styleClass="cell_big_label" text="\$first" />
-        <ImageView fx:id="favourite" fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true" translateX="10.0"/>
+        <ImageView fx:id="favourite" fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
         <Region HBox.hgrow="ALWAYS" />
-          <StackPane fx:id="tag">
-              <ImageView fx:id="tagType" fitHeight="120.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0"/>
-              <Label fx:id="tagLabel" text="\$tag" translateX="-17.0" />
-          </StackPane>
+        <StackPane fx:id="tag">
+          <ImageView fx:id="tagType" fitHeight="120.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0" />
+          <Label fx:id="tagLabel" text="\$tag" translateX="-17.0" />
+        </StackPane>
       </HBox>
       <Label fx:id="modules" />
       <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
       <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
     </VBox>
-      <rowConstraints>
-         <RowConstraints />
-      </rowConstraints>
+    <rowConstraints>
+      <RowConstraints />
+    </rowConstraints>
   </GridPane>
 </HBox>

@@ -31,8 +31,7 @@ public class PersonListPanel extends UiPart<Region> {
 
         /* Disable until tag drifting bug is fixed. */
         /* TODO: This causes NullPointerException but does not crash application. Fix asap.*/
-        personListView.setSelectionModel(null);
-
+//        personListView.setSelectionModel(null);
     }
 
     /**
@@ -48,6 +47,7 @@ public class PersonListPanel extends UiPart<Region> {
                 setText(null);
             } else {
                 setGraphic(new PersonCard(person, getIndex() + 1).getRoot());
+                setStyle("");
             }
         }
     }

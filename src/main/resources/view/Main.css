@@ -196,6 +196,13 @@
 
 .list-cell:filled:selected {
     -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-color: #495e80;
+}
+
+.list-cell:filled:selected #cardPane {
+    -fx-border-color: #3e7b91;
+    -fx-border-width: 1;
 }
 
 .cell_big_label {
