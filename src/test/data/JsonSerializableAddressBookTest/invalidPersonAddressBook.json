@@ -4,10 +4,7 @@
     "phone": "9482424",
     "email": "invalid@email!3e",
     "address": "4th street",
-    "tags" : [ {
-      "tagName" : "classmates",
-      "tagType" : "tag"
-    } ],
+    "tags" : [ "classmates" ],
     "modules" : [ "CS2103T" ]
   } ]
 }

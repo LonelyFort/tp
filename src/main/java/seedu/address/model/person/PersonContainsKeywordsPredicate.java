@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -10,8 +11,7 @@ import seedu.address.commons.util.ToStringBuilder;
  * The search is case-insensitive and allows partial matches for phone numbers.
  */
 public class PersonContainsKeywordsPredicate implements Predicate<Person> {
-    private final List<String> keywords;
-    private final SearchField field;
+    private final Map<SearchField, List<String>> fieldKeywordMap;
 
     /**
      * Represents the search field type for finding persons.
@@ -28,56 +28,68 @@ public class PersonContainsKeywordsPredicate implements Predicate<Person> {
         /**
          * Search by module
          */
-        MODULE
+        MODULE,
+        /**
+         * Search by favourite
+         */
+        FAVOURITE,
     }
 
     /**
      * Constructs a {@code PersonContainsKeywordsPredicate} to find persons by the specified field and keywords.
      *
-     * @param field    The field to search (either {@code NAME} or {@code PHONE}).
-     * @param keywords The list of keywords to match the corresponding specified field.
+     * @param fieldKeywordMap A Map containing the field to search (either {@code NAME}
+     *                        or {@code PHONE} or{@code MODULE}) and a list of keywords
+     *                        to match the corresponding specified field.
      */
-    public PersonContainsKeywordsPredicate(SearchField field, List<String> keywords) {
-        this.field = field;
-        this.keywords = keywords;
+    public PersonContainsKeywordsPredicate(Map<SearchField, List<String>> fieldKeywordMap) {
+        this.fieldKeywordMap = fieldKeywordMap;
     }
 
     @Override
     public boolean test(Person person) {
-        return switch (field) {
-        case NAME -> keywords.stream()
-                .anyMatch(keyword -> person
-                        .getName()
-                        .fullName
-                        .toLowerCase()
-                        .contains(keyword.toLowerCase()));
-        case PHONE -> keywords.stream()
-                .anyMatch(keyword -> person
-                        .getPhone()
-                        .value
-                        .contains(keyword));
-        case MODULE -> keywords.stream()
-                .anyMatch(keyword -> person.getModules().stream()
-                        .anyMatch(module -> module
-                                .getModuleCode()
-                                .toLowerCase()
-                                .contains(keyword.toLowerCase())));
-        };
+        return fieldKeywordMap.entrySet().stream().allMatch(entry -> {
+            SearchField searchField = entry.getKey();
+            List<String> keywords = entry.getValue();
+
+            return switch (searchField) {
+            case NAME -> keywords.stream()
+                    .anyMatch(keyword -> person
+                            .getName().fullName.toLowerCase()
+                            .contains(keyword.toLowerCase()));
+            case PHONE -> keywords.stream()
+                    .anyMatch(keyword -> person
+                            .getPhone().value
+                            .contains(keyword));
+            case MODULE -> keywords.stream()
+                    .anyMatch(keyword -> person.getModules().stream()
+                            .anyMatch(module -> module
+                                    .getModuleCode().toLowerCase()
+                                    .contains(keyword.toLowerCase())));
+            case FAVOURITE -> keywords.stream()
+                    .anyMatch(keyword -> {
+                        String lowerKeyword = keyword.toLowerCase();
+                        boolean isFavourite = person.getIsFavourite();
+                        return (lowerKeyword.equals("y") && isFavourite
+                                || lowerKeyword.equals("n") && !isFavourite);
+                    });
+            };
+        });
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other == this) {
+        if (this == other) {
             return true;
         }
         if (!(other instanceof PersonContainsKeywordsPredicate otherPredicate)) {
             return false;
         }
-        return keywords.equals(otherPredicate.keywords) && field == otherPredicate.field;
+        return fieldKeywordMap.equals(otherPredicate.fieldKeywordMap);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).add("keywords", keywords).toString();
+        return new ToStringBuilder(this).add("fieldKeywordsMap", fieldKeywordMap).toString();
     }
 }

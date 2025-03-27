@@ -16,11 +16,12 @@ public class FindCommand extends Command {
     public static final String COMMAND_WORD = "find";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds contacts based on a specified field. "
-            + "Supported fields: n/, p/, and m/.\n"
+            + "Supported fields: n/, p/, f/, and m/.\n"
             + "Examples:\n"
             + "  " + COMMAND_WORD + " n/ alice bob charlie\n"
             + "  " + COMMAND_WORD + " p/ 91234567\n"
-            + "  " + COMMAND_WORD + " m/ CS2103T";
+            + "  " + COMMAND_WORD + " m/ CS2103T\n"
+            + "  " + COMMAND_WORD + " f/ y\n";
 
     private final PersonContainsKeywordsPredicate predicate;
 
@@ -41,13 +42,10 @@ public class FindCommand extends Command {
         if (other == this) {
             return true;
         }
-
         // instanceof handles nulls
-        if (!(other instanceof FindCommand)) {
+        if (!(other instanceof FindCommand otherFindCommand)) {
             return false;
         }
-
-        FindCommand otherFindCommand = (FindCommand) other;
         return predicate.equals(otherFindCommand.predicate);
     }
 

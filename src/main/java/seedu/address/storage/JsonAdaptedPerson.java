@@ -16,6 +16,7 @@ import seedu.address.model.person.ModuleRegistry.Module;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Role;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -30,6 +31,7 @@ class JsonAdaptedPerson {
     private final String email;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final List<String> modules = new ArrayList<>();
+    private final String role;
     private final Boolean isFavourite;
 
     /**
@@ -39,7 +41,7 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
             @JsonProperty("email") String email,
             @JsonProperty("tags") List<JsonAdaptedTag> tags, @JsonProperty("modules") List<String> modules,
-            @JsonProperty("isFavourite") Boolean isFavourite) {
+            @JsonProperty("role") String role, @JsonProperty("isFavourite") Boolean isFavourite) {
 
         this.name = name;
         this.phone = phone;
@@ -48,6 +50,7 @@ class JsonAdaptedPerson {
             this.tags.addAll(tags);
         }
         this.modules.addAll(modules);
+        this.role = role;
         this.isFavourite = isFavourite;
     }
 
@@ -64,6 +67,7 @@ class JsonAdaptedPerson {
         modules.addAll(source.getModules().stream()
                 .map(Module::getModuleCode)
                 .collect(Collectors.toList()));
+        role = source.getRole().roleName;
         isFavourite = source.getIsFavourite();
     }
 
@@ -110,6 +114,14 @@ class JsonAdaptedPerson {
         }
         final Email modelEmail = new Email(email);
 
+        if (role == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Role.class.getSimpleName()));
+        }
+        if (!Role.isValidRole(role)) {
+            throw new IllegalValueException(Role.MESSAGE_CONSTRAINTS);
+        }
+        final Role modelRole = Role.getRole(role);
+
         if (isFavourite == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "is Favourite"));
         }
@@ -118,6 +130,6 @@ class JsonAdaptedPerson {
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
         final Set<Module> modelModules = new HashSet<>(personModules);
-        return new Person(modelName, modelPhone, modelEmail, modelTags, modelModules, modelIsFavourite);
+        return new Person(modelName, modelPhone, modelEmail, modelRole, modelTags, modelModules, modelIsFavourite);
     }
 }

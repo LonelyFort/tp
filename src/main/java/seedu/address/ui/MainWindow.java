@@ -2,7 +2,9 @@ package seedu.address.ui;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
@@ -169,9 +171,10 @@ public class MainWindow extends UiPart<Stage> implements FunctionalGui {
     public void filterListByGui(String keyword) {
         List<String> moduleCodeList = new ArrayList<>();
         moduleCodeList.add(keyword);
+        Map<PersonContainsKeywordsPredicate.SearchField, List<String>> searchFieldMap = new HashMap<>();
+        searchFieldMap.put(PersonContainsKeywordsPredicate.SearchField.MODULE, moduleCodeList);
         logic.updatePredicateViaGui(
-                new PersonContainsKeywordsPredicate(PersonContainsKeywordsPredicate.SearchField.MODULE,
-                        moduleCodeList));
+                new PersonContainsKeywordsPredicate(searchFieldMap));
     }
 
     /**

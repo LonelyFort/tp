@@ -26,16 +26,16 @@ public class AddCommand extends Command {
             + PREFIX_NAME + "NAME "
             + PREFIX_PHONE + "PHONE "
             + PREFIX_EMAIL + "EMAIL "
+            + PREFIX_ROLE + "ROLE "
             + "[" + PREFIX_TAG + "TAG]...\n"
-            + "[" + PREFIX_ROLE + "ROLE]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_PHONE + "98765432 "
             + PREFIX_EMAIL + "johnd@example.com "
+            + PREFIX_ROLE + "TA "
             + PREFIX_TAG + "friends "
             + PREFIX_TAG + "owesMoney "
-            + PREFIX_ROLE + "TA"
-            + PREFIX_MODULE + "CS2103T";
+            + PREFIX_MODULE + "CS2103T ";
 
 
     public static final String MESSAGE_SUCCESS = "New person added: %1$s";

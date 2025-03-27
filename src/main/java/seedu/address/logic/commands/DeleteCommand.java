@@ -2,13 +2,16 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 
 /**
@@ -25,10 +28,10 @@ public class DeleteCommand extends Command {
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
-    private final Index targetIndex;
+    private final List<Index> targetIndexes;
 
-    public DeleteCommand(Index targetIndex) {
-        this.targetIndex = targetIndex;
+    public DeleteCommand(List<Index> targetIndexes) {
+        this.targetIndexes = targetIndexes;
     }
 
     @Override
@@ -36,13 +39,24 @@ public class DeleteCommand extends Command {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
+        List<Person> deletedPersonList = new LinkedList<>();
+        for (Index index : targetIndexes) {
+            if (index.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
 
-        Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
-        model.deletePerson(personToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+            Person personToDelete = lastShownList.get(index.getZeroBased());
+            model.deletePerson(personToDelete);
+            deletedPersonList.add(personToDelete);
+        }
+        String deletedPersonNames = deletedPersonList.stream()
+                .map(Person::getName)
+                .map(Name::toString)
+                .collect(Collectors.joining(", "));
+
+
+
+        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, deletedPersonNames));
     }
 
     @Override
@@ -57,13 +71,17 @@ public class DeleteCommand extends Command {
         }
 
         DeleteCommand otherDeleteCommand = (DeleteCommand) other;
-        return targetIndex.equals(otherDeleteCommand.targetIndex);
+        return targetIndexes.equals(otherDeleteCommand.targetIndexes);
     }
 
     @Override
     public String toString() {
+        StringBuilder targetIndexBuilder = new StringBuilder();
+        for (Index index : targetIndexes) {
+            targetIndexBuilder.append(index.toString());
+        }
         return new ToStringBuilder(this)
-                .add("targetIndex", targetIndex)
+                .add("targetIndex:", targetIndexBuilder.toString())
                 .toString();
     }
 }
