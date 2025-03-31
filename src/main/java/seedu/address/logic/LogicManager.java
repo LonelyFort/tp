@@ -91,4 +91,9 @@ public class LogicManager implements Logic {
     public void updatePredicateViaGui(Predicate<Person> predicate) {
         model.updateFilteredPersonList(predicate);
     }
+
+    @Override
+    public ObservableList<Person> getUnfilteredPersonList() {
+        return model.getAddressBook().getPersonList();
+    }
 }

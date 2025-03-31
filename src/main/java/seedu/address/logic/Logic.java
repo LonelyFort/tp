@@ -53,4 +53,9 @@ public interface Logic {
      * Allows logic to update filtered task in model using GUI.
      */
     void updatePredicateViaGui(Predicate<Person> predicate);
+
+    /**
+     * Allows logic to get unfiltered list of person from address book.
+     */
+    ObservableList<Person> getUnfilteredPersonList();
 }

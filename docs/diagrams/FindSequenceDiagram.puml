@@ -1,0 +1,66 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant "f:FindCommand" as FindCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("find n/Darren m/2103")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("find n/Darren m/2103")
+activate AddressBookParser
+
+AddressBookParser -> FindCommandParser : parse("n/Darren m/2103")
+activate FindCommandParser
+
+note right of FindCommandParser
+Parses multi-field input:
+- n/, p/, m/, f/
+• Name/Module = partial, case-insensitive
+• Phone = partial
+• Favourite = 'y' or 'n'
+Returns a FindCommand
+end note
+
+FindCommandParser --> AddressBookParser : FindCommand
+deactivate FindCommandParser
+
+AddressBookParser --> LogicManager : FindCommand
+deactivate AddressBookParser
+
+LogicManager -> FindCommand : execute(model)
+activate FindCommand
+
+FindCommand -> Model : updateFilteredPersonList(predicate)
+activate Model
+
+note right of Model
+Model filters person list
+based on the given predicate
+end note
+
+Model --> FindCommand
+deactivate Model
+
+FindCommand -> CommandResult : new CommandResult(feedback)
+activate CommandResult
+
+CommandResult --> FindCommand
+deactivate CommandResult
+
+FindCommand --> LogicManager : CommandResult
+deactivate FindCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
